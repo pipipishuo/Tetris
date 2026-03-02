@@ -36,6 +36,8 @@ import org.jetbrains.compose.resources.painterResource
 
 import demo2.composeapp.generated.resources.Res
 import demo2.composeapp.generated.resources.compose_multiplatform
+import com.example.demo2.Grid
+
 
 @Composable
 @Preview
@@ -65,12 +67,31 @@ fun App() {
             val textMeasurer = rememberTextMeasurer()
 
             Canvas(modifier = Modifier.size(200.dp)) {
+                val unit: Float=100f
+                for (y in 0..Game.row-1) {
+                    for (x in 0 .. Game.colum-1){
+                        val grid= Game.grids[x][y]
+
+                        drawRect(
+                            color = grid.color,
+                            topLeft = Offset(x*unit, y*unit),
+                            size = Size(unit, unit)
+                        )
+                    }
+                }
+                when (Element.type) {
+                    ElementType.LINE -> {
+                        drawRect(
+                            color = Element.color,
+                            topLeft = Offset(Element.x*unit, Element.y*unit),
+                            size = Size(unit, unit)
+                        )                    }
+                    ElementType.SHAPE -> {
+
+                    }
+                }
                 // 在这里进行绘制
-                drawRect(
-                    color = Color.Yellow,
-                    topLeft = Offset(50f, y.toFloat()),
-                    size = Size(100f, 100f)
-                )
+
                 y++
                 if(y>800-(count+1)*100){
                     count++
