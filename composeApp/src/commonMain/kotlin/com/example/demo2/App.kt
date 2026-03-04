@@ -52,14 +52,12 @@ fun App() {
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Button(onClick = { showContent = !showContent }) {
-                Text("Click me1232!")
-            }
-            Button(onClick = { showContent = !showContent
-                val1++
+            Button(onClick = {
+                Element.rotate()
             }) {
-                Text("bottom!")
+                Text("rotate")
             }
+
 
 
             var y by remember { mutableStateOf(0) }
@@ -79,16 +77,15 @@ fun App() {
                         )
                     }
                 }
-                when (Element.type) {
-                    ElementType.LINE -> {
-                        drawRect(
-                            color = Element.color,
-                            topLeft = Offset(Element.x*unit, Element.y*unit),
-                            size = Size(unit, unit)
-                        )                    }
-                    ElementType.SHAPE -> {
 
-                    }
+                val shape:Array<Point> = Element.getShape()
+                for (i in shape.indices) {
+                    var point:Point =shape[i]
+                    drawRect(
+                        color = Element.color,
+                        topLeft = Offset(point.x*unit, point.y*unit),
+                        size = Size(unit, unit)
+                    )
                 }
                 // 在这里进行绘制
 
