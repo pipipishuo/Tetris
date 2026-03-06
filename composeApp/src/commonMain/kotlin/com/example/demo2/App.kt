@@ -37,6 +37,7 @@ import org.jetbrains.compose.resources.painterResource
 import demo2.composeapp.generated.resources.Res
 import demo2.composeapp.generated.resources.compose_multiplatform
 import com.example.demo2.Grid
+import kotlinx.coroutines.sync.withLock
 
 
 @Composable
@@ -53,7 +54,7 @@ fun App() {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Button(onClick = {
-                Element.rotate()
+                Game.rotate()
             }) {
                 Text("rotate")
             }
@@ -66,10 +67,11 @@ fun App() {
 
             Canvas(modifier = Modifier.size(200.dp)) {
                 val unit: Float=100f
+                val grids: Array<Array<Grid>> =Game.getGrid()
+
                 for (y in 0..Game.row-1) {
                     for (x in 0 .. Game.colum-1){
-                        val grid= Game.grids[x][y]
-
+                        val grid= grids[x][y]
                         drawRect(
                             color = grid.color,
                             topLeft = Offset(x*unit, y*unit),
