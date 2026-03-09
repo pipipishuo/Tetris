@@ -58,8 +58,16 @@ fun App() {
             }) {
                 Text("rotate")
             }
-
-
+            Button(onClick = {
+                Game.move(1)
+            }) {
+                Text("right")
+            }
+            Button(onClick = {
+                Game.move(-1)
+            }) {
+                Text("left")
+            }
 
             var y by remember { mutableStateOf(0) }
             var count by remember { mutableStateOf(0) }
@@ -80,7 +88,7 @@ fun App() {
                     }
                 }
 
-                val shape:Array<Point> = Element.getShape()
+                val shape:Array<Point> = Game.getShape()
                 for (i in shape.indices) {
                     var point:Point =shape[i]
                     drawRect(

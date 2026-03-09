@@ -33,9 +33,8 @@ class MainActivity : ComponentActivity() {
             Element.y = 0
 
             while (true) {
-                Thread.sleep(100)
+                Thread.sleep(300)
                 Game.update()
-
             }
         }
         setContent {

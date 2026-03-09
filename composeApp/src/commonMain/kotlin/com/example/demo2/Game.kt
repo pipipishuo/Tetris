@@ -22,3 +22,5 @@ object Game {
 expect fun Game.getGrid(): Array<Array<Grid>>
 expect fun Game.update(): Unit
 expect fun Game.rotate(): Unit
+expect fun Game.move(offset:Int): Unit
+expect fun Game.getShape(): Array<Point>
