@@ -70,8 +70,6 @@ fun App() {
             }
 
             var y by remember { mutableStateOf(0) }
-            var count by remember { mutableStateOf(0) }
-            val textMeasurer = rememberTextMeasurer()
 
             Canvas(modifier = Modifier.size(200.dp)) {
                 val unit: Float=100f
@@ -100,42 +98,14 @@ fun App() {
                 // 在这里进行绘制
 
                 y++
-                if(y>800-(count+1)*100){
-                    count++
-                    y=0
 
-                }
 
-                for (i in 1 .. count) {
-                    drawRect(
-                        color = Color.Yellow,
-                        topLeft = Offset(50f, 800-i*100.toFloat()),
-                        size = Size(100f, 100f)
-                    )
-                }
-                drawLine(
-                    color = Color.Green,
-                    start = Offset.Zero,
-                    end = Offset(size.width, size.height),
-                    strokeWidth = 5f
-                )
 
-                // 2. 测量文字：定义样式并计算布局
-                val textLayoutResult = textMeasurer.measure(
-                    text = y.toString(),
-                    style = TextStyle(
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Blue
-                    )
-                )
 
-                // 3. 绘制文字：将其放置在画布的中心
-                val canvasCenter = Offset(size.width / 2, size.height / 2)
-                drawText(
-                    textLayoutResult = textLayoutResult,
-                    topLeft = canvasCenter
-                )
+
+
+
+
             }
         }
     }

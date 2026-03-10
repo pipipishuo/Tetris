@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import com.example.demo2.ElementType.*
 import kotlin.math.*
-data class Point(val x: Int, val y: Int)
+data class Point(var x: Int, var y: Int)
 enum class ElementType {
     LINE,//直线
     SHAPE,//方块
@@ -30,6 +30,7 @@ object Element {
     var color: Color =Color.Green
 
     var rotate: Int =0       //方向 顺时针旋转 可能值 为0 90 180 270
+    var updateRotate: Int =0       //方向 顺时针旋转 可能值 为0 90 180 270
 
     fun getShape(): Array<Point>{
 
@@ -81,18 +82,58 @@ object Element {
                 offset=offsets
             }
         }
-
+        var temp: Array<Point> =arrayOf()
         for (i in 0..offset.size-1){
             var point:Point =offset[i]
             point= computeRoate(point,rotate.toDouble())
             point=Point(x+point.x,y+point.y)
+            temp=temp.plus(point)
+        }
+        for (i in 0..offset.size-1){
+            var point:Point =offset[i]
+            point= computeRoate(point,updateRotate.toDouble())
+            point=Point(x+point.x,y+point.y)
             offset[i]=point
         }
+        //如果不偏移就满足条件  那就不偏移
+        if(!checkBound(offset,0,0)){
+            rotate=updateRotate
+            return offset
+        }
 
-        return offset
+//        if(!checkBound(offset,1,0)){
+//            rotate=updateRotate
+//            return setoffset(offset,1,0)
+//        }
+//
+//        if(!checkBound(offset,2,0)){
+//            rotate=updateRotate
+//            return setoffset(offset,2,0)
+//        }
+//
+//        if(!checkBound(offset,-1,0)){
+//            rotate=updateRotate
+//            return setoffset(offset,1,0)
+//        }
+//
+//        if(!checkBound(offset,-2,0)){
+//            rotate=updateRotate
+//            return setoffset(offset,-2,0)
+//        }
+//        if(!checkBound(offset,0,-1)){
+//            rotate=updateRotate
+//            return setoffset(offset,0,-1)
+//        }
+//        if(!checkBound(offset,0,-2)){
+//            rotate=updateRotate
+//            return setoffset(offset,0,-2)
+//        }
+
+        return temp
     }
     fun rotate(): Unit{
-        rotate=(rotate+90)%360
+        updateRotate=(updateRotate+90)%360
+
     }
     fun randomType(): Unit {
 
@@ -100,5 +141,36 @@ object Element {
         val randomIndex = (0 until values.size).random()
         type = values[randomIndex]
         type=LINE
+    }
+    fun checkBound(shape: Array<Point>, xoffset:Int, yoffset:Int):Boolean{
+
+        for(i in 0 until shape.size-1){
+            var point = shape[i]
+            point.x=point.x + xoffset
+            point.y=point.y + yoffset
+            if(0<=point.x&&point.x<Game.colum){
+                if(0<=point.y&&point.x<Game.row){
+                    if(Game.grids[point.x][point.y].fill){
+                        return true
+                    }
+                }else{
+                    return false
+                }
+            }else{
+                return false
+            }
+
+        }
+        return false
+    }
+    fun setoffset(shape: Array<Point>, xoffset:Int, yoffset:Int): Array<Point>{
+        var ps: Array<Point> = arrayOf()
+        for(i in 0 until shape.size-1){
+            var point = shape[i]
+            point.x=point.x + xoffset
+            point.y=point.y + yoffset
+            ps=ps.plus(point)
+        }
+        return ps
     }
 }

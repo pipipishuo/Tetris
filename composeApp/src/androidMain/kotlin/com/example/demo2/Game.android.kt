@@ -4,22 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 actual fun Game.update(): Unit {
     synchronized(Game.lock) {
-        var isBottom: Boolean =false;
-        val shape1:Array<Point> = Element.getShape()
-        for (i in shape1.indices) {
-            var point:Point =shape1[i]
-            if((point.y+1)== Game.row){
-                isBottom = true
-                break;
-            }
-
-            if(Game.grids[point.x][point.y+1].fill){
-                isBottom = true
-                break;
-            }
-
-        }
-
+        var isBottom: Boolean =Game.isBottom();
         if (isBottom) {
             val shape: Array<Point> = Element.getShape()
             for (i in shape.indices) {
@@ -43,15 +28,24 @@ actual fun Game.update(): Unit {
                     isFill=true
                 }
                 if(isFill){
-                    for(x in 0..Game.colum-1){
-                        Game.grids[x][y].fill=false
-                        Game.grids[x][y].color = Color.Yellow
+                    for(ty in y downTo  0){
+                        for(x in 0..Game.colum-1){
+                            if(ty!=0){
+                                Game.grids[x][ty].fill=Game.grids[x][ty-1].fill
+                                Game.grids[x][ty].color = Game.grids[x][ty-1].color
+                            }else{
+                                Game.grids[x][ty].fill=false
+                                Game.grids[x][ty].color = Color.Yellow
+                            }
+
+                        }
                     }
                 }
             }
             Element.y = 0
             Element.x = 2
             Element.rotate = 0
+            Element.updateRotate = 0
             Element.randomType()
         } else {
             Element.y++
@@ -72,7 +66,20 @@ actual fun Game.rotate() {
 
 actual fun Game.move(offset: Int) {
     synchronized(Game.lock) {
+        val temp:Int= Element.x
         Element.x=Element.x+offset
+        var shape=Element.getShape()
+        var exceed:Boolean =false
+        for(i in shape.indices){
+            val point:Point = shape[i]
+            if(point.x<0||point.x>Game.colum-1){
+                exceed = true
+                break;
+            }
+        }
+        if(exceed){
+            Element.x=temp
+        }
     }
 }
 
