@@ -1,6 +1,8 @@
 package com.example.demo2
 
 import androidx.compose.ui.graphics.Color
+import kotlin.math.max
+import kotlin.math.min
 
 actual fun Game.update(): Unit {
     synchronized(Game.lock) {
@@ -68,18 +70,9 @@ actual fun Game.move(offset: Int) {
     synchronized(Game.lock) {
         val temp:Int= Element.x
         Element.x=Element.x+offset
-        var shape=Element.getShape()
-        var exceed:Boolean =false
-        for(i in shape.indices){
-            val point:Point = shape[i]
-            if(point.x<0||point.x>Game.colum-1){
-                exceed = true
-                break;
-            }
-        }
-        if(exceed){
-            Element.x=temp
-        }
+        Element.x=max(0,Element.x);
+        Element.x=min(Game.row-1,Element.x);
+
     }
 }
 

@@ -13,15 +13,88 @@ enum class ElementType {
     TU    //土
 }
 fun degToRad(degrees: Double): Double = degrees * PI / 180
-fun computeRoate( p:Point, rotate:Double): Point {
-    var cos: Int=cos(degToRad(rotate)).toInt()
-    var sin: Int=sin(degToRad(rotate)).toInt()
-    var x:Int = p.x
-    var y:Int = p.y
-    var rx=(x * cos - y * sin).toInt()
-    var ry=(x * sin + y * cos).toInt()
-    var p:Point = Point(rx, ry)
-    return p
+fun computeRoate( rotate:Int,type:ElementType): Array<Point> {
+    when(type) {
+        LINE->{     //这个就两种
+            if(rotate%2==0){
+                var offsets: Array<Point> =arrayOf(
+                    Point(-1,0),
+                    Point(0,0),
+                    Point(1,0),
+                    Point(2,0)
+                )
+                return offsets
+            }else{
+                var offsets: Array<Point> =arrayOf(
+                    Point(0,-1),
+                    Point(0,0),
+                    Point(0,1),
+                    Point(0,2)
+                )
+                return offsets
+            }
+        }
+        SHAPE -> { //这个就一种
+            var offsets: Array<Point> =arrayOf(
+                Point(0,0),
+                Point(1,0),
+                Point(1,1),
+                Point(0,1)
+            )
+            return offsets
+        }
+        LF -> {
+
+        }
+        RF -> {
+
+        }
+        TU -> {
+            when(rotate%4){
+                0 ->{
+                    var offsets: Array<Point> =arrayOf(
+                        Point(0,0),
+                        Point(0,1),
+                        Point(1,1),
+                        Point(-1,1)
+                    )
+                    return offsets
+                }
+                1 ->{
+                    var offsets: Array<Point> =arrayOf(
+                        Point(0,0),
+                        Point(0,1),
+                        Point(0,-1),
+                        Point(1,0)
+                    )
+                    return offsets
+                }
+                2 ->{
+                    var offsets: Array<Point> =arrayOf(
+                        Point(0,0),
+                        Point(0,1),
+                        Point(1,0),
+                        Point(-1,0)
+                    )
+                    return offsets
+                }
+                3 ->{
+                    var offsets: Array<Point> =arrayOf(
+                        Point(0,0),
+                        Point(0,1),
+                        Point(0,-1),
+                        Point(-1,0)
+                    )
+                    return offsets
+                }
+            }
+
+        }
+    }
+    var offsets: Array<Point> =arrayOf(
+        Point(0,0)
+    )
+    return offsets
 }
 object Element {
     var x:Int = 0
@@ -34,106 +107,97 @@ object Element {
 
     fun getShape(): Array<Point>{
 
-        var offset: Array<Point> =arrayOf()
-        when(type){
-            LINE -> {
-                var offsets: Array<Point> =arrayOf(
-                    Point(-1,0),
-                    Point(0,0),
-                    Point(1,0),
-                    Point(2,0)
-                )
-                offset=offsets
-            }
-            SHAPE -> {
-                var offsets: Array<Point> =arrayOf(
-                    Point(0,0),
-                    Point(1,0),
-                    Point(1,1),
-                    Point(0,1)
-                )
-                offset=offsets
-            }
-            LF -> {
-                var offsets: Array<Point> =arrayOf(
-                    Point(0,0),
-                    Point(1,0),
-                    Point(0,1),
-                    Point(0,2)
-                )
-                offset=offsets
-            }
-            RF -> {
-                var offsets: Array<Point> =arrayOf(
-                    Point(0,0),
-                    Point(-1,0),
-                    Point(0,1),
-                    Point(0,2)
-                )
-                offset=offsets
-            }
-            TU -> {
-                var offsets: Array<Point> =arrayOf(
-                    Point(0,0),
-                    Point(0,1),
-                    Point(1,1),
-                    Point(-1,1)
-                )
-                offset=offsets
-            }
-        }
+        //var offset: Array<Point> =arrayOf()
+//        when(type){
+//            LINE -> {
+//                var offsets: Array<Point> =arrayOf(
+//                    Point(-1,0),
+//                    Point(0,0),
+//                    Point(1,0),
+//                    Point(2,0)
+//                )
+//                offset=offsets
+//            }
+//            SHAPE -> {
+//
+//                offset=offsets
+//            }
+//            LF -> {
+//                var offsets: Array<Point> =arrayOf(
+//                    Point(0,0),
+//                    Point(1,0),
+//                    Point(0,1),
+//                    Point(0,2)
+//                )
+//                offset=offsets
+//            }
+//            RF -> {
+//                var offsets: Array<Point> =arrayOf(
+//                    Point(0,0),
+//                    Point(-1,0),
+//                    Point(0,1),
+//                    Point(0,2)
+//                )
+//                offset=offsets
+//            }
+//            TU -> {
+//                var offsets: Array<Point> =arrayOf(
+//                    Point(0,0),
+//                    Point(0,1),
+//                    Point(1,1),
+//                    Point(-1,1)
+//                )
+//                offset=offsets
+//            }
+//        }
+        var offset: Array<Point> = computeRoate(rotate,type)
         var temp: Array<Point> =arrayOf()
         for (i in 0..offset.size-1){
             var point:Point =offset[i]
-            point= computeRoate(point,rotate.toDouble())
+
             point=Point(x+point.x,y+point.y)
             temp=temp.plus(point)
         }
+        offset = computeRoate(updateRotate,type)
         for (i in 0..offset.size-1){
             var point:Point =offset[i]
-            point= computeRoate(point,updateRotate.toDouble())
+
             point=Point(x+point.x,y+point.y)
             offset[i]=point
         }
-        //如果不偏移就满足条件  那就不偏移
-        if(!checkBound(offset,0,0)){
+        if (!checkBound(offset,0,0)){
             rotate=updateRotate
             return offset
         }
-
-//        if(!checkBound(offset,1,0)){
-//            rotate=updateRotate
-//            return setoffset(offset,1,0)
-//        }
-//
-//        if(!checkBound(offset,2,0)){
-//            rotate=updateRotate
-//            return setoffset(offset,2,0)
-//        }
-//
-//        if(!checkBound(offset,-1,0)){
-//            rotate=updateRotate
-//            return setoffset(offset,1,0)
-//        }
-//
-//        if(!checkBound(offset,-2,0)){
-//            rotate=updateRotate
-//            return setoffset(offset,-2,0)
-//        }
-//        if(!checkBound(offset,0,-1)){
-//            rotate=updateRotate
-//            return setoffset(offset,0,-1)
-//        }
-//        if(!checkBound(offset,0,-2)){
-//            rotate=updateRotate
-//            return setoffset(offset,0,-2)
-//        }
-
+        if (!checkBound(offset,-1,0)){
+            rotate=updateRotate
+            x=x-1
+            offset=setoffset(offset,-1,0)
+            return offset
+        }
+        if (!checkBound(offset,-2,0)){
+            rotate=updateRotate
+            x=x-2
+            offset=setoffset(offset,-2,0)
+            return offset
+        }
+        if (!checkBound(offset,1,0)){
+            rotate=updateRotate
+            x=x+1
+            offset=setoffset(offset,1,0)
+            return offset
+        }
+        if (!checkBound(offset,2,0)){
+            rotate=updateRotate
+            x=x+2
+            offset=setoffset(offset,2,0)
+            return offset
+        }
         return temp
     }
     fun rotate(): Unit{
-        updateRotate=(updateRotate+90)%360
-
+        updateRotate++
+        updateRotate=updateRotate%4
     }
     fun randomType(): Unit {
 
@@ -144,20 +208,21 @@ object Element {
     }
     fun checkBound(shape: Array<Point>, xoffset:Int, yoffset:Int):Boolean{
 
-        for(i in 0 until shape.size-1){
-            var point = shape[i]
-            point.x=point.x + xoffset
-            point.y=point.y + yoffset
+        for(i in 0 .. shape.size-1){
+            val src = shape.get(i)
+            var point:Point=Point(0,0)
+            point.x=src.x + xoffset
+            point.y=src.y + yoffset
             if(0<=point.x&&point.x<Game.colum){
-                if(0<=point.y&&point.x<Game.row){
+                if(0<=point.y&&point.y<Game.row){
                     if(Game.grids[point.x][point.y].fill){
                         return true
                     }
                 }else{
-                    return false
+                    return true
                 }
             }else{
-                return false
+                return true
             }
 
         }
@@ -165,7 +230,7 @@ object Element {
     }
     fun setoffset(shape: Array<Point>, xoffset:Int, yoffset:Int): Array<Point>{
         var ps: Array<Point> = arrayOf()
-        for(i in 0 until shape.size-1){
+        for(i in 0 .. shape.size-1){
             var point = shape[i]
             point.x=point.x + xoffset
             point.y=point.y + yoffset
