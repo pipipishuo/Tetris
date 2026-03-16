@@ -10,7 +10,9 @@ enum class ElementType {
     SHAPE,//方块
     LF,   //朝左的F
     RF,   //朝右的F
-    TU    //土
+    TU,    //土
+    LZ,
+    RZ
 }
 fun degToRad(degrees: Double): Double = degrees * PI / 180
 fun computeRoate( rotate:Int,type:ElementType): Array<Point> {
@@ -44,10 +46,84 @@ fun computeRoate( rotate:Int,type:ElementType): Array<Point> {
             return offsets
         }
         LF -> {
-
+            when(rotate%4){
+                0 ->{
+                    var offsets: Array<Point> =arrayOf(
+                        Point(0,0),
+                        Point(0,1),
+                        Point(0,-1),
+                        Point(1,-1)
+                    )
+                    return offsets
+                }
+                1 ->{
+                    var offsets: Array<Point> =arrayOf(
+                        Point(0,0),
+                        Point(1,0),
+                        Point(-1,0),
+                        Point(1,1)
+                    )
+                    return offsets
+                }
+                2 ->{
+                    var offsets: Array<Point> =arrayOf(
+                        Point(0,0),
+                        Point(0,1),
+                        Point(0,-1),
+                        Point(-1,1)
+                    )
+                    return offsets
+                }
+                3 ->{
+                    var offsets: Array<Point> =arrayOf(
+                        Point(0,0),
+                        Point(-1,0),
+                        Point(1,0),
+                        Point(-1,-1)
+                    )
+                    return offsets
+                }
+            }
         }
         RF -> {
-
+            when(rotate%4){
+                0 ->{
+                    var offsets: Array<Point> =arrayOf(
+                        Point(0,0),
+                        Point(0,1),
+                        Point(0,-1),
+                        Point(-1,-1)
+                    )
+                    return offsets
+                }
+                1 ->{
+                    var offsets: Array<Point> =arrayOf(
+                        Point(0,0),
+                        Point(1,0),
+                        Point(-1,0),
+                        Point(-1,1)
+                    )
+                    return offsets
+                }
+                2 ->{
+                    var offsets: Array<Point> =arrayOf(
+                        Point(0,0),
+                        Point(0,1),
+                        Point(0,-1),
+                        Point(1,1)
+                    )
+                    return offsets
+                }
+                3 ->{
+                    var offsets: Array<Point> =arrayOf(
+                        Point(0,0),
+                        Point(-1,0),
+                        Point(1,0),
+                        Point(1,-1)
+                    )
+                    return offsets
+                }
+            }
         }
         TU -> {
             when(rotate%4){
@@ -90,6 +166,51 @@ fun computeRoate( rotate:Int,type:ElementType): Array<Point> {
             }
 
         }
+        LZ -> {
+            when(rotate%4) {
+                0 -> {
+                    var offsets: Array<Point> = arrayOf(
+                        Point(0, 0),
+                        Point(1, 0),
+                        Point(0, 1),
+                        Point(-1, 1)
+                    )
+                    return offsets
+                }
+
+                1 -> {
+                    var offsets: Array<Point> = arrayOf(
+                        Point(-1, -1),
+                        Point(-1, 0),
+                        Point(0, 0),
+                        Point(0, 1)
+                    )
+                    return offsets
+                }
+            }
+        }
+        RZ -> {
+            when(rotate%4) {
+                0 -> {
+                    var offsets: Array<Point> = arrayOf(
+                        Point(0, 0),
+                        Point(-1, 0),
+                        Point(0, 1),
+                        Point(1, 1)
+                    )
+                    return offsets
+                }
+                1 -> {
+                    var offsets: Array<Point> = arrayOf(
+                        Point(-1, 1),
+                        Point(-1, 0),
+                        Point(0, 0),
+                        Point(0, -1)
+                    )
+                    return offsets
+                }
+            }
+        }
     }
     var offsets: Array<Point> =arrayOf(
         Point(0,0)
@@ -123,12 +244,7 @@ object Element {
 //                offset=offsets
 //            }
 //            LF -> {
-//                var offsets: Array<Point> =arrayOf(
-//                    Point(0,0),
-//                    Point(1,0),
-//                    Point(0,1),
-//                    Point(0,2)
-//                )
+//
 //                offset=offsets
 //            }
 //            RF -> {
@@ -204,7 +320,7 @@ object Element {
         val values = enumValues<ElementType>()
         val randomIndex = (0 until values.size).random()
         type = values[randomIndex]
-        type=LINE
+
     }
     fun checkBound(shape: Array<Point>, xoffset:Int, yoffset:Int):Boolean{
 

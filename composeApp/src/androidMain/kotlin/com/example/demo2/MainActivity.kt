@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
 
         val job = thread {
 
-            Element.x = 2
+            Element.x = 7
             Element.y = 0
 
             while (true) {

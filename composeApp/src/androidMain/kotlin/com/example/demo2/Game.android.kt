@@ -45,7 +45,7 @@ actual fun Game.update(): Unit {
                 }
             }
             Element.y = 0
-            Element.x = 2
+            Element.x = 7
             Element.rotate = 0
             Element.updateRotate = 0
             Element.randomType()

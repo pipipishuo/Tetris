@@ -10,7 +10,9 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.safeContentPadding
@@ -30,6 +32,7 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.jetbrains.compose.resources.painterResource
@@ -46,66 +49,65 @@ fun App() {
     MaterialTheme {
         var showContent by remember { mutableStateOf(false) }
         var val1 by remember{mutableStateOf(0)}
-        Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.primaryContainer)
-                .safeContentPadding()
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Button(onClick = {
-                Game.rotate()
-            }) {
-                Text("rotate")
-            }
-            Button(onClick = {
-                Game.move(1)
-            }) {
-                Text("right")
-            }
-            Button(onClick = {
-                Game.move(-1)
-            }) {
-                Text("left")
-            }
+        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
+            val unit: Dp = maxWidth / Game.row
+            val width: Dp = maxWidth;
+            Column(
+                modifier = Modifier
+                    .background(MaterialTheme.colorScheme.primaryContainer)
+                    .safeContentPadding()
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
 
-            var y by remember { mutableStateOf(0) }
 
-            Canvas(modifier = Modifier.size(200.dp)) {
-                val unit: Float=100f
-                val grids: Array<Array<Grid>> =Game.getGrid()
+                var y by remember { mutableStateOf(0) }
 
-                for (y in 0..Game.row-1) {
-                    for (x in 0 .. Game.colum-1){
-                        val grid= grids[x][y]
+                Canvas(modifier = Modifier.size(width)) {
+
+                    val grids: Array<Array<Grid>> = Game.getGrid()
+
+                    for (y in 0..Game.row - 1) {
+                        for (x in 0..Game.colum - 1) {
+                            val grid = grids[x][y]
+                            drawRect(
+                                color = grid.color,
+                                topLeft = Offset(x * unit.toPx(), y * unit.toPx()),
+                                size = Size(unit.toPx(), unit.toPx())
+                            )
+                        }
+                    }
+
+                    val shape: Array<Point> = Game.getShape()
+                    for (i in shape.indices) {
+                        var point: Point = shape[i]
                         drawRect(
-                            color = grid.color,
-                            topLeft = Offset(x*unit, y*unit),
-                            size = Size(unit, unit)
+                            color = Element.color,
+                            topLeft = Offset(point.x * unit.toPx(), point.y * unit.toPx()),
+                            size = Size(unit.toPx(), unit.toPx())
                         )
                     }
+                    // 在这里进行绘制
+                    y++
                 }
+                Row {
+                    Button(onClick = {
+                        Game.move(-1)
+                    }) {
+                        Text("left")
+                    }
+                    Button(onClick = {
+                        Game.move(1)
+                    }) {
+                        Text("right")
+                    }
 
-                val shape:Array<Point> = Game.getShape()
-                for (i in shape.indices) {
-                    var point:Point =shape[i]
-                    drawRect(
-                        color = Element.color,
-                        topLeft = Offset(point.x*unit, point.y*unit),
-                        size = Size(unit, unit)
-                    )
+                    Button(onClick = {
+                        Game.rotate()
+                    }) {
+                        Text("rotate")
+                    }
                 }
-                // 在这里进行绘制
-
-                y++
-
-
-
-
-
-
-
-
             }
         }
     }
