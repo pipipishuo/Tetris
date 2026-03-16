@@ -167,7 +167,7 @@ fun computeRoate( rotate:Int,type:ElementType): Array<Point> {
 
         }
         LZ -> {
-            when(rotate%4) {
+            when(rotate%2) {
                 0 -> {
                     var offsets: Array<Point> = arrayOf(
                         Point(0, 0),
@@ -190,7 +190,7 @@ fun computeRoate( rotate:Int,type:ElementType): Array<Point> {
             }
         }
         RZ -> {
-            when(rotate%4) {
+            when(rotate%2) {
                 0 -> {
                     var offsets: Array<Point> = arrayOf(
                         Point(0, 0),
