@@ -73,8 +73,8 @@ fun App() {
                             val grid = grids[x][y]
                             drawRect(
                                 color = grid.color,
-                                topLeft = Offset(x * unit, y * unit),
-                                size = Size(unit, unit)
+                                topLeft = Offset(x * unit+2, y * unit+2),
+                                size = Size(unit-4, unit-4)
                             )
                         }
                     }
@@ -82,10 +82,11 @@ fun App() {
                     val shape: Array<Point> = Game.getShape()
                     for (i in shape.indices) {
                         var point: Point = shape[i]
+                        val color: Color = Element.getColor()
                         drawRect(
-                            color = Element.color,
-                            topLeft = Offset(point.x * unit, point.y * unit),
-                            size = Size(unit, unit)
+                            color = color,
+                            topLeft = Offset(point.x * unit+2, point.y * unit+2),
+                            size = Size(unit-8, unit-8)
                         )
                     }
                     // 在这里进行绘制

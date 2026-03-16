@@ -1,5 +1,6 @@
 package com.example.demo2
 
+import androidx.compose.material3.DividerDefaults.color
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import com.example.demo2.ElementType.*
@@ -221,7 +222,7 @@ object Element {
     var x:Int = 0
     var y:Int = 0
     var type:ElementType=ElementType.TU
-    var color: Color =Color.Green
+
 
     var rotate: Int =0       //方向 顺时针旋转 可能值 为0 90 180 270
     var updateRotate: Int =0       //方向 顺时针旋转 可能值 为0 90 180 270
@@ -353,5 +354,31 @@ object Element {
             ps=ps.plus(point)
         }
         return ps
+    }
+    fun getColor():Color{
+        when(type){
+            TU -> {
+                return Color(255,105, 180)
+            }
+
+            LINE -> {
+                return Color(0,255,0)
+            }
+            SHAPE -> {
+                return Color(0,0,255)
+            }
+            LF -> {
+                return Color(139, 69, 19)
+            }
+            RF -> {
+                return Color(0,255,255)
+            }
+            LZ -> {
+                return Color(255,0,255)
+            }
+            RZ -> {
+                return Color(255,125,125)
+            }
+        }
     }
 }

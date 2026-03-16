@@ -1,6 +1,7 @@
 package com.example.demo2
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.ColorPainter
 import kotlin.math.max
 import kotlin.math.min
 
@@ -9,13 +10,14 @@ actual fun Game.update(): Unit {
         var isBottom: Boolean =Game.isBottom();
         if (isBottom) {
             val shape: Array<Point> = Element.getShape()
+            val color: Color = Element.getColor()
             for (i in shape.indices) {
                 var point: Point = shape[i]
                 if(Game.grids[point.x][point.y].fill){
                     var i:Int =0;
                 }
                 Game.grids[point.x][point.y].fill = true
-                Game.grids[point.x][point.y].color = Color(0, 255, 0)
+                Game.grids[point.x][point.y].color =color
             }
 
             for(y in 0..Game.row-1){
