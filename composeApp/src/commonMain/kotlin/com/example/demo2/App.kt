@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.font.FontVariation.width
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.tooling.preview.Preview
@@ -49,22 +50,22 @@ fun App() {
     MaterialTheme {
         var showContent by remember { mutableStateOf(false) }
         var val1 by remember{mutableStateOf(0)}
-        BoxWithConstraints(modifier = Modifier.fillMaxSize()) {
-            val unit: Dp = maxWidth / Game.row
-            val width: Dp = maxWidth;
+
             Column(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.primaryContainer)
                     .safeContentPadding()
-                    .fillMaxSize(),
+                    .fillMaxSize().fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
 
 
+                Canvas(modifier = Modifier.fillMaxWidth().weight(0.1f)){
+
+                }
                 var y by remember { mutableStateOf(0) }
-
-                Canvas(modifier = Modifier.size(width)) {
-
+                Canvas(modifier = Modifier.fillMaxWidth().weight(0.7f)) {
+                    val unit: Float =size.width/Game.colum
                     val grids: Array<Array<Grid>> = Game.getGrid()
 
                     for (y in 0..Game.row - 1) {
@@ -72,8 +73,8 @@ fun App() {
                             val grid = grids[x][y]
                             drawRect(
                                 color = grid.color,
-                                topLeft = Offset(x * unit.toPx(), y * unit.toPx()),
-                                size = Size(unit.toPx(), unit.toPx())
+                                topLeft = Offset(x * unit, y * unit),
+                                size = Size(unit, unit)
                             )
                         }
                     }
@@ -83,14 +84,14 @@ fun App() {
                         var point: Point = shape[i]
                         drawRect(
                             color = Element.color,
-                            topLeft = Offset(point.x * unit.toPx(), point.y * unit.toPx()),
-                            size = Size(unit.toPx(), unit.toPx())
+                            topLeft = Offset(point.x * unit, point.y * unit),
+                            size = Size(unit, unit)
                         )
                     }
                     // 在这里进行绘制
                     y++
                 }
-                Row {
+                Row(modifier = Modifier.weight(0.2f)) {
                     Button(onClick = {
                         Game.move(-1)
                     }) {
@@ -109,6 +110,6 @@ fun App() {
                     }
                 }
             }
-        }
+
     }
 }
