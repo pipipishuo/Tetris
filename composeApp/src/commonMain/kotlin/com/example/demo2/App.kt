@@ -21,15 +21,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.DoneSegment
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
@@ -52,9 +55,9 @@ import kotlinx.coroutines.sync.withLock
 @Preview
 fun App() {
     MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
-        var val1 by remember{mutableStateOf(0)}
+
         var score by remember { mutableStateOf("分数:"+Game.score.toString()) }
+        var showDialog by remember { mutableStateOf(false) }
             Column(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.primaryContainer)
@@ -80,10 +83,34 @@ fun App() {
                     Text(modifier = Modifier.align(Alignment.End), text = score)
 
                 }
+                if(showDialog) {
+                    AlertDialog(
+                        onDismissRequest = { showDialog = false },
+                        title = { Text("提示") },
+                        text = { Text("游戏结束") },
+                        confirmButton = {
+                            TextButton(onClick = {
+                                // 确认操作
+                                Game.restart()
+                                showDialog=false
+                            }) {
+                                Text("重新开始")
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = {
+
+                            }) {
+                                Text("退出")
+                            }
+                        }
+                    )
+                }
 
                 var y by remember { mutableStateOf(0) }
                 Canvas(modifier = Modifier.fillMaxHeight(0.8f).fillMaxWidth()) {
-                    score="分数:"+Game.score.toString()
+                    score="分数:"+Game.getScore().toString()
+                    showDialog= Game.getIsOver()
                     val unit: Float =size.width/Game.colum
                     val grids: Array<Array<Grid>> = Game.getGrid()
 
@@ -110,6 +137,7 @@ fun App() {
                     }
                     // 在这里进行绘制
                     y++
+                    y=y%2
                 }
                 Row(modifier = Modifier.fillMaxHeight(0.2f).fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center) {
@@ -133,6 +161,9 @@ fun App() {
                         Game.rotate()
                     }) {
                         Text("rotate")
+                    }
+                    Button(onClick = { showDialog = true }) {
+                        Text("显示对话框")
                     }
                 }
             }

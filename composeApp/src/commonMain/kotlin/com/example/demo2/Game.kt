@@ -16,6 +16,7 @@ object Game {
         }
     }
 
+    var isOver:Boolean =false
     fun isBottom():Boolean{
         var isBottom: Boolean=false
         val shape1:Array<Point> = Element.getShape()
@@ -41,3 +42,6 @@ expect fun Game.rotate(): Unit
 expect fun Game.move(offset:Int): Unit
 expect fun Game.getShape(): Array<Point>
 expect fun Game.down(): Unit
+expect fun Game.getScore(): Int
+expect fun Game.getIsOver(): Boolean
+expect fun Game.restart(): Unit

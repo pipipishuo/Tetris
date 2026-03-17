@@ -15,10 +15,12 @@ actual fun Game.update(): Unit {
                 var point: Point = shape[i]
                 if(point.x>=0&&point.x < Game.colum&&point.y>=0&&point.y < Game.row) {
                     if(Game.grids[point.x][point.y].fill){
-                        var i:Int =0;
+                        isOver=true;
                     }
                     Game.grids[point.x][point.y].fill = true
                     Game.grids[point.x][point.y].color =color
+                }else{
+                    isOver=true
                 }
             }
 
@@ -93,6 +95,33 @@ actual fun Game.down() {
         var isbottom=Game.isBottom()
         if(!isbottom){
             Element.y++
+        }
+    }
+}
+
+actual fun Game.getScore(): Int {
+    synchronized(Game.lock) {
+        return score
+    }
+}
+
+actual fun Game.getIsOver(): Boolean {
+    synchronized(Game.lock) {
+        return isOver
+    }
+}
+
+actual fun Game.restart() {
+    synchronized(Game.lock) {
+        Element.x = 7
+        Element.y = 0
+        isOver=false
+        for(y in 0..Game.row-1) {
+
+            for (x in 0..Game.colum - 1) {
+                Game.grids[x][y].fill=false
+                Game.grids[x][y].color = Color.Yellow
+            }
         }
     }
 }
