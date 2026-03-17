@@ -13,11 +13,13 @@ actual fun Game.update(): Unit {
             val color: Color = Element.getColor()
             for (i in shape.indices) {
                 var point: Point = shape[i]
-                if(Game.grids[point.x][point.y].fill){
-                    var i:Int =0;
+                if(point.x>=0&&point.x < Game.colum&&point.y>=0&&point.y < Game.row) {
+                    if(Game.grids[point.x][point.y].fill){
+                        var i:Int =0;
+                    }
+                    Game.grids[point.x][point.y].fill = true
+                    Game.grids[point.x][point.y].color =color
                 }
-                Game.grids[point.x][point.y].fill = true
-                Game.grids[point.x][point.y].color =color
             }
 
             for(y in 0..Game.row-1){
@@ -44,6 +46,7 @@ actual fun Game.update(): Unit {
 
                         }
                     }
+                    score++
                 }
             }
             Element.y = 0
@@ -82,5 +85,14 @@ actual fun Game.getShape(): Array<Point> {
     synchronized(Game.lock) {
         var shape=Element.getShape()
         return shape
+    }
+}
+
+actual fun Game.down() {
+    synchronized(Game.lock) {
+        var isbottom=Game.isBottom()
+        if(!isbottom){
+            Element.y++
+        }
     }
 }

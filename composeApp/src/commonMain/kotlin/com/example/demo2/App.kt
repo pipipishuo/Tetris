@@ -10,11 +10,15 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
@@ -50,21 +54,36 @@ fun App() {
     MaterialTheme {
         var showContent by remember { mutableStateOf(false) }
         var val1 by remember{mutableStateOf(0)}
-
+        var score by remember { mutableStateOf("分数:"+Game.score.toString()) }
             Column(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.primaryContainer)
                     .safeContentPadding()
-                    .fillMaxSize().fillMaxWidth(),
+                    .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
 
 
-                Canvas(modifier = Modifier.fillMaxWidth().weight(0.1f)){
+//                Canvas(modifier = Modifier.fillMaxWidth().weight(0.1f)){
+//
+//                    drawText()
+//                }
+
+// 单个子项右对齐
+                Column(
+                    modifier =  Modifier.fillMaxHeight(0.1f).fillMaxWidth()
+                ) {
+                    Text("", modifier = Modifier.align(Alignment.Start))
+
+                    Text("", modifier = Modifier.align(Alignment.CenterHorizontally))
+
+                    Text(modifier = Modifier.align(Alignment.End), text = score)
 
                 }
+
                 var y by remember { mutableStateOf(0) }
-                Canvas(modifier = Modifier.fillMaxWidth().weight(0.7f)) {
+                Canvas(modifier = Modifier.fillMaxHeight(0.8f).fillMaxWidth()) {
+                    score="分数:"+Game.score.toString()
                     val unit: Float =size.width/Game.colum
                     val grids: Array<Array<Grid>> = Game.getGrid()
 
@@ -92,7 +111,9 @@ fun App() {
                     // 在这里进行绘制
                     y++
                 }
-                Row(modifier = Modifier.weight(0.2f)) {
+                Row(modifier = Modifier.fillMaxHeight(0.2f).fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center) {
+
                     Button(onClick = {
                         Game.move(-1)
                     }) {
@@ -103,7 +124,11 @@ fun App() {
                     }) {
                         Text("right")
                     }
-
+                    Button(onClick = {
+                        Game.down()
+                    }) {
+                        Text("down")
+                    }
                     Button(onClick = {
                         Game.rotate()
                     }) {

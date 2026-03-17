@@ -8,6 +8,8 @@ object Game {
     val lock = Any()
     val row:Int = 20
     val colum:Int = 13
+
+    var score:Int = 0
     val grids: Array<Array<Grid>>  =Array(colum) {
         Array(row) {
             Grid(false, Color.Yellow)
@@ -38,3 +40,4 @@ expect fun Game.update(): Unit
 expect fun Game.rotate(): Unit
 expect fun Game.move(offset:Int): Unit
 expect fun Game.getShape(): Array<Point>
+expect fun Game.down(): Unit
