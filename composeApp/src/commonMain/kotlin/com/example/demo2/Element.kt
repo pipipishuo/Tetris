@@ -321,7 +321,7 @@ object Element {
         val values = enumValues<ElementType>()
         val randomIndex = (0 until values.size).random()
         type = values[randomIndex]
-        type = ElementType.LINE
+       // type = ElementType.LINE
     }
     fun checkBound(shape: Array<Point>, xoffset:Int, yoffset:Int):Boolean{
 

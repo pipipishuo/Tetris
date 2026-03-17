@@ -1,5 +1,6 @@
 package com.example.demo2
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 
@@ -45,3 +46,5 @@ expect fun Game.down(): Unit
 expect fun Game.getScore(): Int
 expect fun Game.getIsOver(): Boolean
 expect fun Game.restart(): Unit
+@Composable
+expect fun Game.quit(): Unit

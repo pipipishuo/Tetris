@@ -1,10 +1,14 @@
 package com.example.demo2
 
+import android.app.Activity
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.ColorPainter
 import kotlin.math.max
 import kotlin.math.min
-
+import androidx.compose.ui.platform.LocalContext
 actual fun Game.update(): Unit {
     synchronized(Game.lock) {
         var isBottom: Boolean =Game.isBottom();
@@ -123,5 +127,16 @@ actual fun Game.restart() {
                 Game.grids[x][y].color = Color.Yellow
             }
         }
+    }
+}
+@Composable
+actual fun Game.quit() {
+    val context = LocalContext.current
+    Button(
+        onClick = {
+            (context as? Activity)?.finish()
+        }
+    ) {
+        Text("退出应用")
     }
 }

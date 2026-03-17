@@ -18,7 +18,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.withLock
 import kotlin.concurrent.thread
-
+import androidx.compose.ui.platform.LocalContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
             Element.y = 0
 
             while (true) {
-                Thread.sleep(30)
+                Thread.sleep(300)
                 Game.update()
             }
         }

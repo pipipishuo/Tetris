@@ -54,6 +54,7 @@ import kotlinx.coroutines.sync.withLock
 @Composable
 @Preview
 fun App() {
+
     MaterialTheme {
 
         var score by remember { mutableStateOf("分数:"+Game.score.toString()) }
@@ -98,11 +99,9 @@ fun App() {
                             }
                         },
                         dismissButton = {
-                            TextButton(onClick = {
 
-                            }) {
-                                Text("退出")
-                            }
+                            //Game.quit()
+
                         }
                     )
                 }
@@ -162,9 +161,7 @@ fun App() {
                     }) {
                         Text("rotate")
                     }
-                    Button(onClick = { showDialog = true }) {
-                        Text("显示对话框")
-                    }
+
                 }
             }
 
