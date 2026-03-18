@@ -1,6 +1,9 @@
 package com.example.demo2
 
 import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
+import androidx.activity.ComponentActivity
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -129,12 +132,22 @@ actual fun Game.restart() {
         }
     }
 }
+fun Context.findActivity(): Activity? {
+    return when (this) {
+        is Activity -> this
+        is ContextWrapper -> baseContext.findActivity()
+        else -> null
+    }
+}
 @Composable
 actual fun Game.quit() {
     val context = LocalContext.current
+    val activity=LocalContext.current.findActivity()
+    val placeholder:Int =2;
     Button(
         onClick = {
-            (context as? Activity)?.finish()
+
+            activity?.finish()
         }
     ) {
         Text("退出应用")

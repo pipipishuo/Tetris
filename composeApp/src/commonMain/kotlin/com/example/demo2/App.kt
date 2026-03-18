@@ -11,8 +11,10 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -21,6 +23,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -100,7 +103,7 @@ fun App() {
                         },
                         dismissButton = {
 
-                            //Game.quit()
+                            Game.quit()
 
                         }
                     )
@@ -138,30 +141,45 @@ fun App() {
                     y++
                     y=y%2
                 }
-                Row(modifier = Modifier.fillMaxHeight(0.2f).fillMaxWidth(),
+                Row(modifier = Modifier.fillMaxHeight(0.4f).fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center) {
 
                     Button(onClick = {
                         Game.move(-1)
-                    }) {
+                    },
+                        modifier = Modifier.weight(0.25f),
+                        contentPadding = PaddingValues(
+                            horizontal = 2.dp,  // 左右内边距
+                        )) {
                         Text("left")
                     }
                     Button(onClick = {
                         Game.move(1)
-                    }) {
+                    },
+                        modifier = Modifier.weight(0.25f),
+                        contentPadding = PaddingValues(
+                            horizontal = 2.dp,  // 左右内边距
+                        )) {
                         Text("right")
                     }
                     Button(onClick = {
-                        Game.down()
-                    }) {
-                        Text("down")
-                    }
-                    Button(onClick = {
                         Game.rotate()
-                    }) {
+                    },
+                        modifier = Modifier.weight(0.25f),
+                        contentPadding = PaddingValues(
+                            horizontal = 2.dp,  // 左右内边距
+                        )) {
                         Text("rotate")
                     }
-
+                    Button(onClick = {
+                        Game.down()
+                    },
+                        modifier = Modifier.weight(0.25f),
+                        contentPadding = PaddingValues(
+                            horizontal = 2.dp,  // 左右内边距
+                        )) {
+                        Text("down")
+                    }
                 }
             }
 
