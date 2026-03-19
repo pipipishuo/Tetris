@@ -1,6 +1,7 @@
 package com.example.demo2
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -21,14 +22,23 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxState
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.SwipeToDismissBoxValue.*
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,6 +61,9 @@ import org.jetbrains.compose.resources.painterResource
 import demo2.composeapp.generated.resources.Res
 import demo2.composeapp.generated.resources.compose_multiplatform
 import com.example.demo2.Grid
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.sync.withLock
 
 
@@ -66,10 +79,12 @@ fun App() {
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.primaryContainer)
                     .safeContentPadding()
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    ,
+
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-
+                SwipeableCardModern()
 
 //                Canvas(modifier = Modifier.fillMaxWidth().weight(0.1f)){
 //
@@ -183,5 +198,145 @@ fun App() {
                 }
             }
 
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SwipeableCardModern() {
+    var isVisible by remember { mutableStateOf(true) }
+
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        if (isVisible) {
+            // 1. 创建状态 - 注意不要传 confirmValueChange！
+            val dismissState = rememberSwipeToDismissBoxState(
+                positionalThreshold = { totalDistance -> totalDistance / 2f } // 滑动超过一半触发
+            )
+
+            // 2. 监听状态变化（推荐方式）
+            LaunchedEffect(dismissState) {
+                // 使用 snapshotFlow 监听 currentValue 的变化
+                snapshotFlow { dismissState.currentValue }
+                    // 过滤掉 Settled 状态，只处理最终滑动方向
+                    .map { it }
+                    .distinctUntilChanged()
+                    .collect { value ->
+                        when (value) {
+                            SwipeToDismissBoxValue.StartToEnd -> {
+                                println("👉 右滑判定 (Like)")
+                                // 延迟一下等动画完成
+                                delay(300)
+                                isVisible = false
+                            }
+                            SwipeToDismissBoxValue.EndToStart -> {
+                                println("👈 左滑判定 (Dislike)")
+                                delay(300)
+                                isVisible = false
+                            }
+                            SwipeToDismissBoxValue.Settled -> {
+                                // 无操作
+                            }
+
+                            StartToEnd -> TODO()
+                            EndToStart -> TODO()
+                            Settled -> TODO()
+                        }
+                    }
+            }
+
+            // 3. SwipeToDismissBox 组件
+            SwipeToDismissBox(
+                state = dismissState,
+                modifier = Modifier
+                    .width(300.dp)
+                    .height(400.dp),
+                // 注意：这里使用 onDismissed 回调（新 API）
+                onDismiss = { dismissValue ->
+                    // 这个回调会在滑动完成时立即触发
+                    when (dismissValue) {
+                        SwipeToDismissBoxValue.StartToEnd -> {
+                            println("onDismissed: 右滑")
+                            // 可以在这里执行轻量级操作
+                        }
+                        SwipeToDismissBoxValue.EndToStart -> {
+                            println("onDismissed: 左滑")
+                        }
+                        SwipeToDismissBoxValue.Settled -> {
+                            // 无操作
+                        }
+                    }
+                },
+                // 背景内容：滑动时露出的部分
+                backgroundContent = {
+                    BackgroundContent(dismissState)
+                },
+                // 前景内容：实际滑动的卡片
+                content = {
+                    Card(
+                        modifier = Modifier.fillMaxSize(),
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surface
+                        )
+                    ) {
+                        Box(contentAlignment = Alignment.Center) {
+                            Text(
+                                text = "滑动我",
+                                style = MaterialTheme.typography.headlineMedium
+                            )
+                        }
+                    }
+                }
+            )
+        } else {
+            // 重置按钮
+            Button(onClick = { isVisible = true }) {
+                Text("重置卡片")
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun BackgroundContent(dismissState: SwipeToDismissBoxState) {
+    val direction = dismissState.dismissDirection
+    val targetValue = dismissState.targetValue
+
+    val backgroundColor by animateColorAsState(
+        targetValue = when {
+            direction == SwipeToDismissBoxValue.StartToEnd -> Color.Green
+            direction == SwipeToDismissBoxValue.EndToStart -> Color.Red
+            else -> Color.Gray
+        },
+        label = "background color"
+    )
+
+    val contentAlignment = when (direction) {
+        SwipeToDismissBoxValue.StartToEnd -> Alignment.CenterStart
+        SwipeToDismissBoxValue.EndToStart -> Alignment.CenterEnd
+        else -> Alignment.Center
+    }
+
+    val hintText = when (direction) {
+        SwipeToDismissBoxValue.StartToEnd -> "❤️ LIKE"
+        SwipeToDismissBoxValue.EndToStart -> "❌ NOPE"
+        else -> ""
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(backgroundColor)
+            .padding(horizontal = 24.dp),
+        contentAlignment = contentAlignment
+    ) {
+        Text(
+            text = hintText,
+            color = Color.White,
+            style = MaterialTheme.typography.titleLarge
+        )
     }
 }
