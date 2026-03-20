@@ -39,6 +39,7 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation("io.github.aakira:napier:2.7.1") // 请使用最新版本
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

@@ -11,6 +11,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -46,6 +47,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.DoneSegment
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
@@ -56,6 +58,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.currentStateAsState
 import org.jetbrains.compose.resources.painterResource
 
 import demo2.composeapp.generated.resources.Res
@@ -70,6 +75,17 @@ import kotlinx.coroutines.sync.withLock
 @Composable
 @Preview
 fun App() {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val lifecycleState by lifecycleOwner.lifecycle.currentStateAsState()
+
+    when (lifecycleState) {
+        Lifecycle.State.RESUMED -> Text("前台活跃中")
+        Lifecycle.State.STARTED -> Text("可见但无焦点")
+        Lifecycle.State.CREATED -> {
+            println("已创建但不可见")
+        }
+        else -> Text("其他状态")
+    }
 
     MaterialTheme {
 
@@ -84,7 +100,7 @@ fun App() {
 
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                SwipeableCardModern()
+                //SwipeableCardModern()
 
 //                Canvas(modifier = Modifier.fillMaxWidth().weight(0.1f)){
 //
@@ -125,7 +141,25 @@ fun App() {
                 }
 
                 var y by remember { mutableStateOf(0) }
-                Canvas(modifier = Modifier.fillMaxHeight(0.8f).fillMaxWidth()) {
+                Canvas(modifier = Modifier.fillMaxHeight(0.8f).fillMaxWidth().pointerInput(Unit) {
+                    // 检测水平拖动
+                    detectHorizontalDragGestures(
+                        onDragStart = { offset ->
+                            // 可选：只有从屏幕左边缘开始的拖动才处理
+                            // 这里简化为所有水平拖动
+                            println( "这是 DEBUG 日志")
+                        },
+                        onDragEnd = {
+                            // 滑动结束时，如果超过了阈值，执行返回
+//                            if (backStack.size > 1) { // 确保不是首页
+//                                onSwipeBack()
+//                            }
+                        }
+                    ) { change, dragAmount ->
+                        // 这里可以处理滑动过程中的动画（例如页面跟随移动）
+                        change.consume()
+                    }
+                }) {
                     score="分数:"+Game.getScore().toString()
                     showDialog= Game.getIsOver()
                     val unit: Float =size.width/Game.colum
