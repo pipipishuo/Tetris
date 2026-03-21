@@ -11,6 +11,8 @@ object Game {
     val colum:Int = 13
 
     var score:Int = 0
+
+    var paused:Boolean = false
     val grids: Array<Array<Grid>>  =Array(colum) {
         Array(row) {
             Grid(false, Color.Yellow)
@@ -48,3 +50,7 @@ expect fun Game.getIsOver(): Boolean
 expect fun Game.restart(): Unit
 @Composable
 expect fun Game.quit(): Unit
+
+expect fun Game.getPause(): Boolean;
+
+expect fun Game.setPause(flag: Boolean): Unit;

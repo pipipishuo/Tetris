@@ -229,6 +229,16 @@ fun App() {
                         )) {
                         Text("down")
                     }
+                    Button(onClick = {
+                        val flag= Game.getPause()
+                        Game.setPause(!flag)
+                    },
+                        modifier = Modifier.weight(0.25f),
+                        contentPadding = PaddingValues(
+                            horizontal = 2.dp,  // 左右内边距
+                        )) {
+                        Text("pause")
+                    }
                 }
             }
 

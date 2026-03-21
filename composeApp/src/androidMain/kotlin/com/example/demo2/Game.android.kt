@@ -14,6 +14,7 @@ import kotlin.math.min
 import androidx.compose.ui.platform.LocalContext
 actual fun Game.update(): Unit {
     synchronized(Game.lock) {
+        if(Game.paused)return
         var isBottom: Boolean =Game.isBottom();
         if (isBottom) {
             val shape: Array<Point> = Element.getShape()
@@ -151,5 +152,17 @@ actual fun Game.quit() {
         }
     ) {
         Text("退出应用")
+    }
+}
+
+actual fun Game.getPause(): Boolean {
+    synchronized(Game.lock) {
+        return Game.paused
+    }
+}
+
+actual fun Game.setPause(flag: Boolean) {
+    synchronized(Game.lock) {
+         Game.paused=flag
     }
 }
