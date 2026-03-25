@@ -76,16 +76,18 @@ import kotlinx.coroutines.sync.withLock
 @Preview
 fun App() {
     val lifecycleOwner = LocalLifecycleOwner.current
-    val lifecycleState by lifecycleOwner.lifecycle.currentStateAsState()
-
-    when (lifecycleState) {
-        Lifecycle.State.RESUMED -> Text("前台活跃中")
-        Lifecycle.State.STARTED -> Text("可见但无焦点")
-        Lifecycle.State.CREATED -> {
-            println("已创建但不可见")
-        }
-        else -> Text("其他状态")
-    }
+   // val lifecycleState by lifecycleOwner.lifecycle.currentStateAsState()
+    lifecycleOwner.lifecycle.addObserver(StateObserver())
+//    when (lifecycleState) {
+//        Lifecycle.State.RESUMED -> Text("前台活跃中")
+//        Lifecycle.State.STARTED -> {
+//
+//        }
+//        Lifecycle.State.CREATED -> {
+//           // println("已创建但不可见")
+//        }
+//        else -> Text("其他状态")
+//    }
 
     MaterialTheme {
 
@@ -118,7 +120,7 @@ fun App() {
                     Text(modifier = Modifier.align(Alignment.End), text = score)
 
                 }
-                if(showDialog) {
+                if(Game.paused||showDialog) {
                     AlertDialog(
                         onDismissRequest = { showDialog = false },
                         title = { Text("提示") },
@@ -141,25 +143,7 @@ fun App() {
                 }
 
                 var y by remember { mutableStateOf(0) }
-                Canvas(modifier = Modifier.fillMaxHeight(0.8f).fillMaxWidth().pointerInput(Unit) {
-                    // 检测水平拖动
-                    detectHorizontalDragGestures(
-                        onDragStart = { offset ->
-                            // 可选：只有从屏幕左边缘开始的拖动才处理
-                            // 这里简化为所有水平拖动
-                            println( "这是 DEBUG 日志")
-                        },
-                        onDragEnd = {
-                            // 滑动结束时，如果超过了阈值，执行返回
-//                            if (backStack.size > 1) { // 确保不是首页
-//                                onSwipeBack()
-//                            }
-                        }
-                    ) { change, dragAmount ->
-                        // 这里可以处理滑动过程中的动画（例如页面跟随移动）
-                        change.consume()
-                    }
-                }) {
+                Canvas(modifier = Modifier.fillMaxHeight(0.8f).fillMaxWidth() ) {
                     score="分数:"+Game.getScore().toString()
                     showDialog= Game.getIsOver()
                     val unit: Float =size.width/Game.colum
@@ -180,6 +164,7 @@ fun App() {
                     for (i in shape.indices) {
                         var point: Point = shape[i]
                         val color: Color = Element.getColor()
+
                         drawRect(
                             color = color,
                             topLeft = Offset(point.x * unit+2, point.y * unit+2),
@@ -230,8 +215,7 @@ fun App() {
                         Text("down")
                     }
                     Button(onClick = {
-                        val flag= Game.getPause()
-                        Game.setPause(!flag)
+                        Game.setPause(true)
                     },
                         modifier = Modifier.weight(0.25f),
                         contentPadding = PaddingValues(

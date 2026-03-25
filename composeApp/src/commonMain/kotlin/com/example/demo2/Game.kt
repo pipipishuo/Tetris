@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Color
 
 
 object Game {
+    var first:Boolean = true
     val lock = Any()
     val row:Int = 20
     val colum:Int = 13

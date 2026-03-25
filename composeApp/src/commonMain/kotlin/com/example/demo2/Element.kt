@@ -5,6 +5,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import com.example.demo2.ElementType.*
 import kotlin.math.*
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
+
 data class Point(var x: Int, var y: Int)
 enum class ElementType {
     LINE,//直线
@@ -218,9 +221,22 @@ fun computeRoate( rotate:Int,type:ElementType): Array<Point> {
     )
     return offsets
 }
+class DefaultDelegate<T>(private var value: T) : ReadWriteProperty<Any?, T> {
+
+    override fun getValue(thisRef: Any?, property: KProperty<*>): T {
+
+        println("📖 读取 ${property.name} = $value")
+        return value
+    }
+
+    override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
+        println("✍️ 修改 ${property.name}: $value")
+        this.value = value
+    }
+}
 object Element {
     var x:Int = 0
-    var y:Int = 0
+    var y:Int by DefaultDelegate(0)
     var type:ElementType=ElementType.TU
 
 
@@ -267,6 +283,7 @@ object Element {
 //                offset=offsets
 //            }
 //        }
+
         var offset: Array<Point> = computeRoate(rotate,type)
         var temp: Array<Point> =arrayOf()
         for (i in 0..offset.size-1){

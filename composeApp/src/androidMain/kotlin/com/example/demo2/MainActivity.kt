@@ -26,17 +26,20 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
 
+        if(Game.first){
+            val job = thread {
 
-        val job = thread {
+                Element.x = 7
+                Element.y = 0
 
-            Element.x = 7
-            Element.y = 0
-
-            while (true) {
-                Thread.sleep(300)
-                Game.update()
+                while (true) {
+                    Thread.sleep(300)
+                    Game.update()
+                }
             }
+            Game.first=false
         }
+
         setContent {
             App()
         }
