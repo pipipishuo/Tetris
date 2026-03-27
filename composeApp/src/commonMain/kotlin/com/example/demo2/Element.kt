@@ -225,12 +225,12 @@ class DefaultDelegate<T>(private var value: T) : ReadWriteProperty<Any?, T> {
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): T {
 
-        println("📖 读取 ${property.name} = $value")
+
         return value
     }
 
     override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
-        println("✍️ 修改 ${property.name}: $value")
+
         this.value = value
     }
 }

@@ -15,7 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import demo2.composeapp.generated.resources.Res
 actual fun Game.update(): Unit {
     synchronized(Game.lock) {
-        Game.playsound()
+
         if(Game.paused)return
         var isBottom: Boolean =Game.isBottom();
         if (isBottom) {
@@ -59,6 +59,7 @@ actual fun Game.update(): Unit {
                         }
                     }
                     score++
+                    Game.playsound()
                 }
             }
             Element.y = 0
