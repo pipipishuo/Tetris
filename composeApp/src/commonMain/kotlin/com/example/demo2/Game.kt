@@ -1,9 +1,14 @@
 package com.example.demo2
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
+import demo2.composeapp.generated.resources.Res
 
-
+import eu.iamkonstantin.kotlin.gadulka.GadulkaPlayer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 object Game {
     var first:Boolean = true
@@ -55,3 +60,15 @@ expect fun Game.quit(): Unit
 expect fun Game.getPause(): Boolean;
 
 expect fun Game.setPause(flag: Boolean): Unit;
+fun Game.playsound(): Unit{
+    val uri=Res.getUri("files/dragon-studio-ding-402325.mp3")
+
+
+    val scope = CoroutineScope(Dispatchers.Main)
+
+    scope.launch(Dispatchers.Main) {  // 在主线程执行
+        val player = GadulkaPlayer()
+        player.play(uri)
+    }
+
+}

@@ -12,8 +12,10 @@ import androidx.compose.ui.graphics.painter.ColorPainter
 import kotlin.math.max
 import kotlin.math.min
 import androidx.compose.ui.platform.LocalContext
+import demo2.composeapp.generated.resources.Res
 actual fun Game.update(): Unit {
     synchronized(Game.lock) {
+        Game.playsound()
         if(Game.paused)return
         var isBottom: Boolean =Game.isBottom();
         if (isBottom) {
